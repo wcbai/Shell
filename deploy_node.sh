@@ -315,7 +315,8 @@ install_ssr(){
 	read -p "$(echo -e "$yellow数据库密码$none(默认：${cyan}ssrpanel$none)")：" db_Password
 		[ -z "$db_Password" ] && db_Password="ssrpanel"
 	read -p "本节点ID:" node_Id
-	read -p "流量计算比例:" transfer_Ratio
+	read -p "$(echo -e "$yellow流量计算比例$none(默认：${cyan}1.5$none)")：" transfer_Ratio
+		[ -z "$transfer_Ratio" ] && transfer_Ratio="1.5"
 	sed -i -e "s/db_Host/$db_Host/g" usermysql.json
 	sed -i -e "s/db_Port/$db_Port/g" usermysql.json
 	sed -i -e "s/db_Name/$db_Name/g" usermysql.json
@@ -334,7 +335,7 @@ install_ssr(){
 		[ -z "$ss_Password" ] && ss_Password="forvip"
 	
 	echo -e "选择加密方式：$yellow \n1. none\n2. rc4-md5\n3. aes-256-cfb\n4. chacha20"$none
-	read -p "$(echo -e "(默认：${cyan}1. none$none)")：" ss_method
+	read -p "$(echo -e "(默认：${cyan}1. rc4-md5$none)")：" ss_method
 		[ -z "$ss_method" ] && ss_method="rc4-md5"
 	if [[ $ss_method ]]; then
 		case $ss_method in
@@ -354,7 +355,7 @@ install_ssr(){
 	fi
 
 	echo -e "选择传输协议：$yellow \n1. origin\n2. auth_sha1_v4\n3. auth_aes128_md5\n4. auth_chain_a"$none
-	read -p "$(echo -e "(默认：${cyan}1. origin$none)")：" ss_protocol
+	read -p "$(echo -e "(默认：${cyan}1. auth_aes128_md5$none)")：" ss_protocol
 		[ -z "$ss_protocol" ] && ss_protocol="auth_aes128_md5"
 	if [[ $ss_protocol ]]; then
 		case $ss_protocol in
@@ -374,7 +375,7 @@ install_ssr(){
 	fi
 
 	echo -e "选择混淆方式：$yellow \n1. plain\n2. http_simple\n3. http_post\n4. tls1.2_ticket_auth"$none
-	read -p "$(echo -e "(默认：${cyan}1. plain$none)")：" ss_obfs
+	read -p "$(echo -e "(默认：${cyan}1. http_simple$none)")：" ss_obfs
 		[ -z "$ss_obfs" ] && ss_obfs="http_simple"
 	if [[ $ss_obfs ]]; then
 		case $ss_obfs in
