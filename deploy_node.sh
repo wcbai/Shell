@@ -335,7 +335,7 @@ install_ssr(){
 		[ -z "$ss_Password" ] && ss_Password="forvip"
 	
 	echo -e "选择加密方式：$yellow \n1. none\n2. rc4-md5\n3. aes-256-cfb\n4. chacha20"$none
-	read -p "$(echo -e "(默认：${cyan}1. rc4-md5$none)")：" ss_method
+	read -p "$(echo -e "(默认：${cyan}2. rc4-md5$none)")：" ss_method
 		[ -z "$ss_method" ] && ss_method="rc4-md5"
 	if [[ $ss_method ]]; then
 		case $ss_method in
@@ -355,7 +355,7 @@ install_ssr(){
 	fi
 
 	echo -e "选择传输协议：$yellow \n1. origin\n2. auth_sha1_v4\n3. auth_aes128_md5\n4. auth_chain_a"$none
-	read -p "$(echo -e "(默认：${cyan}1. auth_aes128_md5$none)")：" ss_protocol
+	read -p "$(echo -e "(默认：${cyan}3. auth_aes128_md5$none)")：" ss_protocol
 		[ -z "$ss_protocol" ] && ss_protocol="auth_aes128_md5"
 	if [[ $ss_protocol ]]; then
 		case $ss_protocol in
@@ -375,7 +375,7 @@ install_ssr(){
 	fi
 
 	echo -e "选择混淆方式：$yellow \n1. plain\n2. http_simple\n3. http_post\n4. tls1.2_ticket_auth"$none
-	read -p "$(echo -e "(默认：${cyan}1. http_simple$none)")：" ss_obfs
+	read -p "$(echo -e "(默认：${cyan}2. http_simple$none)")：" ss_obfs
 		[ -z "$ss_obfs" ] && ss_obfs="http_simple"
 	if [[ $ss_obfs ]]; then
 		case $ss_obfs in
