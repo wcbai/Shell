@@ -297,16 +297,7 @@ firewall_set(){
 }
 
 install_ssr(){
-	pip install pymysql peewee pickle 
 	clear
-	cd /usr/
-	rm -rf /usr/libsodium-1.0.16
-	wget https://github.com/jedisct1/libsodium/releases/download/1.0.16/libsodium-1.0.16.tar.gz
-	tar xf libsodium-1.0.16.tar.gz && rm -rf libsodium-1.0.16.tar.gz && cd libsodium-1.0.16
-	./configure && make -j2 && make install
-	echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
-	echo 'libsodium安装完成'
-	
 	cd /usr/
 	rm -rf /usr/shadowsocksr
 	echo 'SSR下载中...'
