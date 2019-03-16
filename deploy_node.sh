@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
-# Require Root Permission
-# panel node deploy script
-# Author: 阿拉凹凸曼 (https://sobaigu.com)
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+#=================================================================#
+#   System Required:  CentOS7, Ubuntu, Root Permission            #
+#   Description: panel node deploy script                         #
+#   Version: 1.1.0                                                #
+#   Author: 阿拉凹凸曼                                             #
+#   Intro:  https://sobaigu.com/                                  #
+#==================================================================
 
 [ $(id -u) != "0" ] && { echo "错误: 请用root执行"; exit 1; }
 sys_bit=$(uname -m)
