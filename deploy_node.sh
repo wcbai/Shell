@@ -336,29 +336,29 @@ install_ssr(){
 	read -p "$(echo -e "$yellow设置认证密码$none(默认：${cyan}forvip$none)")：" ss_Password
 		[ -z "$ss_Password" ] && ss_Password="forvip"
 	
-	echo -e "选择加密方式：$yellow \n1. none\n2. aes-256-cfb\n3. chacha20\n4. aes-256-gcm"$none
+	echo -e "选择加密方式：$yellow \n1. none\n2. rc4-md5\n3. aes-256-cfb\n4. chacha20"$none
 	read -p "$(echo -e "(默认：${cyan}1. none$none)")：" ss_method
-		[ -z "$ss_method" ] && ss_method="none"
+		[ -z "$ss_method" ] && ss_method="rc4-md5"
 	if [[ $ss_method ]]; then
 		case $ss_method in
 			1)
 				ss_method="none"
 				;;
 			2)
-				ss_method="aes-256-cfb"
+				ss_method="rc4-md5"
 				;;
 			3)
-				ss_method="chacha20"
+				ss_method="aes-256-cfb"
 				;;
 			4)
-				ss_method="aes-256-gcm"
+				ss_method="chacha20"
 				;;
 		esac
 	fi
 
 	echo -e "选择传输协议：$yellow \n1. origin\n2. auth_sha1_v4\n3. auth_aes128_md5\n4. auth_chain_a"$none
 	read -p "$(echo -e "(默认：${cyan}1. origin$none)")：" ss_protocol
-		[ -z "$ss_protocol" ] && ss_protocol="origin"
+		[ -z "$ss_protocol" ] && ss_protocol="auth_aes128_md5"
 	if [[ $ss_protocol ]]; then
 		case $ss_protocol in
 			1)
@@ -378,7 +378,7 @@ install_ssr(){
 
 	echo -e "选择混淆方式：$yellow \n1. plain\n2. http_simple\n3. http_post\n4. tls1.2_ticket_auth"$none
 	read -p "$(echo -e "(默认：${cyan}1. plain$none)")：" ss_obfs
-		[ -z "$ss_obfs" ] && ss_obfs="plain"
+		[ -z "$ss_obfs" ] && ss_obfs="http_simple"
 	if [[ $ss_obfs ]]; then
 		case $ss_obfs in
 			1)
