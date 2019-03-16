@@ -356,7 +356,7 @@ install_ssr(){
 		esac
 	fi
 
-	echo -e "选择传输协议：$yellow \n1. origin\n2. auth_sha1_v4\n3. auth_sha1_v4_compatible\n4. auth_aes128_md5\n5. auth_chain_a"$none
+	echo -e "选择传输协议：$yellow \n1. origin\n2. auth_sha1_v4\n3. auth_aes128_md5\n4. auth_chain_a"$none
 	read -p "$(echo -e "(默认：${cyan}1. origin$none)")：" ss_protocol
 		[ -z "$ss_protocol" ] && ss_protocol="origin"
 	if [[ $ss_protocol ]]; then
@@ -368,18 +368,15 @@ install_ssr(){
 				ss_protocol="auth_sha1_v4"
 				;;
 			3)
-				ss_protocol="auth_sha1_v4_compatible"
-				;;
-			4)
 				ss_protocol="auth_aes128_md5"
 				;;
-			5)
+			4)
 				ss_protocol="auth_chain_a"
 				;;
 		esac
 	fi
 
-	echo -e "选择混淆方式：$yellow \n1. plain\n2. http_simple\n3. tls1.2_ticket_auth\n4. tls1.2_ticket_auth_compatible"$none
+	echo -e "选择混淆方式：$yellow \n1. plain\n2. http_simple\n3. http_post\n4. tls1.2_ticket_auth"$none
 	read -p "$(echo -e "(默认：${cyan}1. plain$none)")：" ss_obfs
 		[ -z "$ss_obfs" ] && ss_obfs="plain"
 	if [[ $ss_obfs ]]; then
@@ -391,10 +388,10 @@ install_ssr(){
 				ss_obfs="http_simple"
 				;;
 			3)
-				ss_obfs="tls1.2_ticket_auth"
+				ss_obfs="http_post"
 				;;
 			4)
-				ss_obfs="tls1.2_ticket_auth_compatible"
+				ss_obfs="tls1.2_ticket_auth"
 				;;
 		esac
 	fi
