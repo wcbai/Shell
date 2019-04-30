@@ -24,7 +24,7 @@ if [[ -f /usr/bin/apt ]] || [[ -f /usr/bin/yum && -f /bin/systemctl ]]; then
 	fi
 
 else
-	echo -e " 哈哈……这个 ${red}辣鸡脚本${none} 不支持你的系统。 ${yellow}(-_-) ${none}" && exit 1
+	echo -e " 哈哈……这个 ${red}辣鸡脚本${none} 只支持CentOS7+及Ubuntu14+ ${yellow}(-_-) ${none}" && exit 1
 fi
 
 service_Cmd() {
@@ -131,6 +131,14 @@ config_caddy() {
 }
 
 install_v2ray(){
+	# 先卸载再装
+	# original post https://github.com/v2ray/v2ray-core/issues/187
+	systemctl stop v2ray
+	rm -rf /usr/bin/v2ray /etc/init.d/v2ray /lib/systemd/system/v2ray.service
+	echo "Logs and configurations are preserved, you can remove these manually"
+	echo "logs directory: /var/log/v2ray"
+	echo "configuration directory: /etc/v2ray"
+
 	curl -L -s https://raw.githubusercontent.com/ColetteContreras/v2ray-ssrpanel-plugin/master/install-release.sh | bash
 	wget --no-check-certificate -O config.json https://raw.githubusercontent.com/828768/Shell/master/resource/v2ray-config.json
 	sed -i -e "s/v2ray_Port/$v2ray_Port/g" config.json
@@ -418,9 +426,8 @@ install_ssr(){
 
 open_bbr(){
 	cd
-	wget --no-check-certificate https://github.com/teddysun/across/raw/master/bbr.sh
-	chmod +x bbr.sh
-	./bbr.sh
+	wget -N --no-check-certificate "https://raw.githubusercontent.com/828768/Shell/master/bbr_tcp_mod.sh"
+	bash bbr_tcp_mod.sh
 }
 
 echo -e "1.Install V2Ray+Caddy"
