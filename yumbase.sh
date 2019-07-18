@@ -1,5 +1,5 @@
 #更新系统
-yum update -y && yum install wget -y
+yum --exclude=kernel* -y update && yum install wget -y
 #安装常用基础软件
 yum install -y epel-release vim lrzsz screen git ntp crontabs net-tools telnet
 #设置时区为东八区
