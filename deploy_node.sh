@@ -70,6 +70,8 @@ get_ip() {
 config_v2ray_caddy() {
 	read -p "伪装域名，如 sobaigu.com ：" fake_Domain
 		[ -z "$fake_Domain" ] && fake_Domain=":80 :443"
+	read -p "申请CA证书?(默认 N 用自签名，套CDN的就不用申请CA证书了) y/N ：" email
+		[ -z "$email" ] && email="self_signed"
 	read -p "$(echo -e "$yellow转发路径$none(不要带/，默认：${cyan}game$none)")：" forward_Path
 		[ -z "$forward_Path" ] && forward_Path="game"
 	read -p "$(echo -e "$yellow V2Ray端口$none(不可80/443，默认：${cyan}10086$none)")：" v2ray_Port
@@ -216,8 +218,12 @@ install_caddy() {
 	# 修改配置
 	mkdir -p /etc/caddy/
 	wget --no-check-certificate -O Caddyfile https://raw.githubusercontent.com/828768/Shell/master/resource/Caddyfile
-	local user_Name=$(((RANDOM << 22)))
-	sed -i -e "s/user_Name/$user_Name/g" Caddyfile
+	if [ $email == y ]; then
+		local email=$(((RANDOM << 22)))
+		sed -i -e "s/email/$email@gmail.com/g" Caddyfile
+	else
+		sed -i -e "s/email/self_signed/g" Caddyfile
+	fi
 	sed -i -e "s/fake_Domain/$fake_Domain/g" Caddyfile
 	sed -i -e "s/forward_Path/$forward_Path/g" Caddyfile
 	sed -i -e "s/v2ray_Port/$v2ray_Port/g" Caddyfile
