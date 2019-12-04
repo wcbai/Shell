@@ -312,8 +312,8 @@ firewall_set(){
 
 install_ssr(){
 	clear
-	cd /usr/
 	Install_Libsodium
+	cd /usr/
 	rm -rf /usr/shadowsocksr
 	echo 'SSR下载中...'
 	git clone -b master https://github.com/828768/shadowsocksr.git && cd shadowsocksr && bash initcfg.sh
@@ -437,6 +437,7 @@ Check_Libsodium_ver(){
 	echo -e "${Info} libsodium 最新版本为 ${Green_font_prefix}${Libsodiumr_ver}${Font_color_suffix} !"
 }
 Install_Libsodium(){
+	Libsodiumr_file=Libsodiumr_file="/usr/local/lib/libsodium.so"
 	if [[ -e ${Libsodiumr_file} ]]; then
 		echo -e "${Error} libsodium 已安装 , 是否覆盖安装(更新)？[y/N]"
 		read -e -p "(默认: n):" yn
