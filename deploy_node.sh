@@ -460,8 +460,11 @@ Install_Libsodium(){
 	echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
 	ldconfig
 	cd .. && rm -rf libsodium-${Libsodiumr_ver}.tar.gz && rm -rf libsodium-${Libsodiumr_ver}
-	[[ ! -e ${Libsodiumr_file} ]] && echo -e "${Error} libsodium 安装失败 !" && exit 1
-	echo && echo -e "${Info} libsodium 安装成功 !" && echo
+	if [[ -e ${Libsodiumr_file} ]]; then
+		echo && echo -e "${Info} libsodium 安装成功 !" && echo
+	else
+		echo -e "${Error} libsodium 安装失败 !" && exit 1
+	fi
 }
 open_bbr(){
 	cd
