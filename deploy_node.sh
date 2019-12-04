@@ -448,28 +448,15 @@ Install_Libsodium(){
 		echo -e "${Info} libsodium 未安装，开始安装..."
 	fi
 	Check_Libsodium_ver
-	if [[ ${release} == "centos" ]]; then
-		yum update
-		echo -e "${Info} 安装依赖..."
-		yum -y groupinstall "Development Tools"
-		echo -e "${Info} 下载..."
-		wget  --no-check-certificate -N "https://github.com/jedisct1/libsodium/releases/download/${Libsodiumr_ver}/libsodium-${Libsodiumr_ver}.tar.gz"
-		echo -e "${Info} 解压..."
-		tar -xzf libsodium-${Libsodiumr_ver}.tar.gz && cd libsodium-${Libsodiumr_ver}
-		echo -e "${Info} 编译安装..."
-		./configure --disable-maintainer-mode && make -j2 && make install
-		echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
-	else
-		apt-get update
-		echo -e "${Info} 安装依赖..."
-		apt-get install -y build-essential
-		echo -e "${Info} 下载..."
-		wget  --no-check-certificate -N "https://github.com/jedisct1/libsodium/releases/download/${Libsodiumr_ver}/libsodium-${Libsodiumr_ver}.tar.gz"
-		echo -e "${Info} 解压..."
-		tar -xzf libsodium-${Libsodiumr_ver}.tar.gz && cd libsodium-${Libsodiumr_ver}
-		echo -e "${Info} 编译安装..."
-		./configure --disable-maintainer-mode && make -j2 && make install
-	fi
+	echo -e "${Info} 安装依赖..."
+	$cmd -y groupinstall "Development Tools"
+	echo -e "${Info} 下载..."
+	wget  --no-check-certificate -N "https://github.com/jedisct1/libsodium/releases/download/${Libsodiumr_ver}/libsodium-${Libsodiumr_ver}.tar.gz"
+	echo -e "${Info} 解压..."
+	tar -xzf libsodium-${Libsodiumr_ver}.tar.gz && cd libsodium-${Libsodiumr_ver}
+	echo -e "${Info} 编译安装..."
+	./configure --disable-maintainer-mode && make -j2 && make install
+	echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
 	ldconfig
 	cd .. && rm -rf libsodium-${Libsodiumr_ver}.tar.gz && rm -rf libsodium-${Libsodiumr_ver}
 	[[ ! -e ${Libsodiumr_file} ]] && echo -e "${Error} libsodium 安装失败 !" && exit 1
