@@ -430,11 +430,14 @@ install_ssr(){
 	echo "/usr/shadowsocksr/run.sh" >> /etc/rc.d/rc.local
 	firewall_set
 }
+
 Check_Libsodium_ver(){
-	echo -e "${Info} 开始获取 libsodium 最新版本..."
-	Libsodiumr_ver=$(wget -qO- "https://github.com/jedisct1/libsodium/tags"|grep "/jedisct1/libsodium/releases/tag/"|head -1|sed -r 's/.*tag\/(.+)\">.*/\1/')
-	[[ -z ${Libsodiumr_ver} ]] && Libsodiumr_ver=${Libsodiumr_ver_backup}
-	echo -e "${Info} libsodium 最新版本为 ${Green_font_prefix}${Libsodiumr_ver}${Font_color_suffix} !"
+	Libsodiumr_ver_backup="1.0.17"
+	# echo -e "${Info} 开始获取 libsodium 最新版本..."
+	# Libsodiumr_ver=$(wget -qO- "https://github.com/jedisct1/libsodium/tags"|grep "/jedisct1/libsodium/releases/tag/"|head -1|sed -r 's/.*tag\/(.+)\">.*/\1/')
+	Libsodiumr_ver=$Libsodiumr_ver_backup
+	# [[ -z ${Libsodiumr_ver} ]] && Libsodiumr_ver=${Libsodiumr_ver_backup}
+	# echo -e "${Info} libsodium 最新版本为 ${Green_font_prefix}${Libsodiumr_ver}${Font_color_suffix} !"
 }
 Install_Libsodium(){
 	Libsodiumr_file=Libsodiumr_file="/usr/local/lib/libsodium.so"
@@ -452,7 +455,8 @@ Install_Libsodium(){
 	echo -e "${Info} 安装依赖..."
 	$cmd -y groupinstall "Development Tools"
 	echo -e "${Info} 下载..."
-	wget  --no-check-certificate -N "https://github.com/jedisct1/libsodium/releases/download/${Libsodiumr_ver}-RELEASE/libsodium-${Libsodiumr_ver}.tar.gz"
+	# wget  --no-check-certificate -N "https://github.com/jedisct1/libsodium/releases/download/${Libsodiumr_ver}-RELEASE/libsodium-${Libsodiumr_ver}.tar.gz"
+	wget  --no-check-certificate -N "https://github.com/jedisct1/libsodium/releases/download/1.0.17/libsodium-1.0.17.tar.gz"
 	echo -e "${Info} 解压..."
 	tar -xzf libsodium-${Libsodiumr_ver}.tar.gz && cd libsodium-${Libsodiumr_ver}
 	echo -e "${Info} 编译安装..."
