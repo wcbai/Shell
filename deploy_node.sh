@@ -312,7 +312,7 @@ firewall_set(){
 
 install_ssr(){
 	clear
-	Install_Libsodium
+	# Install_Libsodium
 	cd /usr/
 	rm -rf /usr/shadowsocksr
 	echo 'SSR下载中...'
@@ -349,7 +349,7 @@ install_ssr(){
 	read -p "$(echo -e "$yellow设置认证密码$none(默认：${cyan}forvip$none)")：" ss_Password
 		[ -z "$ss_Password" ] && ss_Password="forvip"
 	
-	echo -e "选择加密方式：$yellow \n1. none\n2. rc4-md5\n3. aes-256-cfb\n4. chacha20"$none
+	echo -e "选择加密方式：$yellow \n1. none\n2. rc4-md5\n3. aes-256-cfb"$none
 	read -p "$(echo -e "(默认：${cyan}2. rc4-md5$none)")：" ss_method
 		[ -z "$ss_method" ] && ss_method="rc4-md5"
 	if [[ $ss_method ]]; then
@@ -362,9 +362,6 @@ install_ssr(){
 				;;
 			3)
 				ss_method="aes-256-cfb"
-				;;
-			4)
-				ss_method="chacha20"
 				;;
 		esac
 	fi
