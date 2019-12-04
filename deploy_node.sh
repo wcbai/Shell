@@ -432,7 +432,7 @@ install_ssr(){
 }
 
 Check_Libsodium_ver(){
-	Libsodiumr_ver_backup="1.0.17"
+	Libsodiumr_ver_backup="1.0.15"
 	# echo -e "${Info} 开始获取 libsodium 最新版本..."
 	# Libsodiumr_ver=$(wget -qO- "https://github.com/jedisct1/libsodium/tags"|grep "/jedisct1/libsodium/releases/tag/"|head -1|sed -r 's/.*tag\/(.+)\">.*/\1/')
 	Libsodiumr_ver=$Libsodiumr_ver_backup
