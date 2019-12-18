@@ -37,6 +37,7 @@ service_Cmd() {
 
 $cmd --exclude=kernel* -y update
 $cmd install -y wget curl unzip git gcc vim lrzsz screen ntp ntpdate cron net-tools telnet python-pip m2crypto
+pip install --upgrade pip setuptools
 # 设置时区为CST
 echo yes | cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 ntpdate cn.pool.ntp.org
@@ -317,7 +318,7 @@ install_ssr(){
 	rm -rf /usr/shadowsocksr
 	echo 'SSR下载中...'
 	git clone -b master https://github.com/828768/shadowsocksr.git && cd shadowsocksr && bash initcfg.sh
-	pip install --upgrade setuptools &&	pip install -r requestment.txt
+	pip install -r requestment.txt
 	echo 'SSR安装完成'
 	echo '开始配置节点连接信息...'
 	read -p "数据库服务器地址:" db_Host
