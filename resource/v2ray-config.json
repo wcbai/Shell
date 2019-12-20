@@ -10,16 +10,19 @@
       "StatsService"
     ]
   },
-  "stats": {},
+  "stats": {
+    "trackIp": true
+  },
   "inbounds": [
     {
-    "listen": "127.0.0.1",
-    "port": usersync_Port,
-    "protocol": "dokodemo-door",
-    "settings": {
-      "address": "127.0.0.1"
-    },
-    "tag": "api"
+      // demo, it looks like there is no use
+      "listen": "127.0.0.1",
+      "port": usersync_Port,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "address": "127.0.0.1"
+      },
+      "tag": "api"
     },
     {
       "tag": "proxy",
@@ -70,6 +73,8 @@
     "nodeId": node_Id,
     // every N seconds
     "checkRate": 300,
+    // change this to true if you want to ignore users which has an empty vmess_id
+    "ignoreEmptyVmessID": true,
     // user config
     "user": {
       // inbound tag, which inbound you would like add user to
