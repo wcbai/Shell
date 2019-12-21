@@ -187,36 +187,36 @@ extract(){
 
 
 # 1: new V2Ray. 0: no. 2: not installed. 3: check failed. 4: don't check.
-getVersion(){
-    if [[ -n "$VERSION" ]]; then
-        NEW_VER="$VERSION"
-        if [[ ${NEW_VER} != v* ]]; then
-          NEW_VER=v${NEW_VER}
-        fi
-        return 4
-    else
-        VER=`/usr/bin/v2ray/v2ray -version 2>/dev/null`
-        RETVAL="$?"
-        CUR_VER=`echo $VER | head -n 1 | cut -d " " -f2`
-        if [[ ${CUR_VER} != v* ]]; then
-            CUR_VER=v${CUR_VER}
-        fi
-        TAG_URL="https://api.github.com/repos/ColetteContreras/v2ray-poseidon/releases/latest"
-        NEW_VER=`curl ${PROXY} -s ${TAG_URL} --connect-timeout 10| grep 'tag_name' | head -1 | cut -d\" -f4`
-        if [[ ${NEW_VER} != v* ]]; then
-          NEW_VER=v${NEW_VER}
-        fi
-        if [[ $? -ne 0 ]] || [[ $NEW_VER == "" ]]; then
-            colorEcho ${RED} "Failed to fetch release information. Please check your network or try again."
-            return 3
-        elif [[ $RETVAL -ne 0 ]];then
-            return 2
-        elif [[ `echo $NEW_VER | cut -d. -f-2` != `echo $CUR_VER | cut -d. -f-2` ]];then
-            return 1
-        fi
-        return 0
-    fi
-}
+# getVersion(){
+#     if [[ -n "$VERSION" ]]; then
+#         NEW_VER="$VERSION"
+#         if [[ ${NEW_VER} != v* ]]; then
+#           NEW_VER=v${NEW_VER}
+#         fi
+#         return 4
+#     else
+#         VER=`/usr/bin/v2ray/v2ray -version 2>/dev/null`
+#         RETVAL="$?"
+#         CUR_VER=`echo $VER | head -n 1 | cut -d " " -f2`
+#         if [[ ${CUR_VER} != v* ]]; then
+#             CUR_VER=v${CUR_VER}
+#         fi
+#         TAG_URL="https://api.github.com/repos/ColetteContreras/v2ray-poseidon/releases/latest"
+#         NEW_VER=`curl ${PROXY} -s ${TAG_URL} --connect-timeout 10| grep 'tag_name' | head -1 | cut -d\" -f4`
+#         if [[ ${NEW_VER} != v* ]]; then
+#           NEW_VER=v${NEW_VER}
+#         fi
+#         if [[ $? -ne 0 ]] || [[ $NEW_VER == "" ]]; then
+#             colorEcho ${RED} "Failed to fetch release information. Please check your network or try again."
+#             return 3
+#         elif [[ $RETVAL -ne 0 ]];then
+#             return 2
+#         elif [[ `echo $NEW_VER | cut -d. -f-2` != `echo $CUR_VER | cut -d. -f-2` ]];then
+#             return 1
+#         fi
+#         return 0
+#     fi
+# }
 
 stopV2ray(){
     colorEcho ${BLUE} "Shutting down V2Ray service."
