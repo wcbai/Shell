@@ -471,10 +471,10 @@ Install_Libsodium(){
     # Install libsodium
 	tar zxf ${libsodium_file}.tar.gz
 	cd ${libsodium_file}
-	# ./configure --prefix=/usr && make && make install
 
 	echo -e "${Info} 编译安装..."
-	./configure --disable-maintainer-mode && make -j2 && make install
+	./configure --prefix=/usr && make && make install && rm -rf ${libsodium_file}.tar.gz ${libsodium_file}
+	# ./configure --disable-maintainer-mode && make -j2 && make install
 	echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
 	if [[ -e ${Libsodiumr_file} ]]; then
 		echo && echo -e "${Info} libsodium 安装成功 !" && echo
