@@ -432,14 +432,6 @@ install_ssr(){
 	firewall_set
 }
 
-Check_Libsodium_ver(){
-	Libsodiumr_ver_backup="1.0.15"
-	# echo -e "${Info} 开始获取 libsodium 最新版本..."
-	# Libsodiumr_ver=$(wget -qO- "https://github.com/jedisct1/libsodium/tags"|grep "/jedisct1/libsodium/releases/tag/"|head -1|sed -r 's/.*tag\/(.+)\">.*/\1/')
-	Libsodiumr_ver=$Libsodiumr_ver_backup
-	# [[ -z ${Libsodiumr_ver} ]] && Libsodiumr_ver=${Libsodiumr_ver_backup}
-	# echo -e "${Info} libsodium 最新版本为 ${Green_font_prefix}${Libsodiumr_ver}${Font_color_suffix} !"
-}
 Install_Libsodium(){
 	Libsodiumr_file=Libsodiumr_file="/usr/local/lib/libsodium.so"
 	if [[ -e ${Libsodiumr_file} ]]; then
@@ -452,24 +444,21 @@ Install_Libsodium(){
 	else
 		echo -e "${Info} libsodium 未安装，开始安装..."
 	fi
-	Check_Libsodium_ver
 	echo -e "${Info} 安装依赖..."
 	$cmd -y groupinstall "Development Tools"
 	echo -e "${Info} 下载..."
-	wget  --no-check-certificate -N "https://github.com/jedisct1/libsodium/releases/download/${Libsodiumr_ver}/libsodium-${Libsodiumr_ver}.tar.gz"
-	echo -e "${Info} 解压..."
-	tar -xzf libsodium-${Libsodiumr_ver}.tar.gz && cd libsodium-${Libsodiumr_ver}
+	git clone --depth=1 https://github.com/jedisct1/libsodium --branch stable
+	cd libsodium
 	echo -e "${Info} 编译安装..."
 	./configure --disable-maintainer-mode && make -j2 && make install
 	echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
-	ldconfig
-	cd .. && rm -rf libsodium-${Libsodiumr_ver}.tar.gz && rm -rf libsodium-${Libsodiumr_ver}
 	if [[ -e ${Libsodiumr_file} ]]; then
 		echo && echo -e "${Info} libsodium 安装成功 !" && echo
 	else
 		echo -e "${Error} libsodium 安装失败 !" && exit 1
 	fi
 }
+
 open_bbr(){
 	cd
 	wget -N --no-check-certificate "https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh" -O bbr_tcp_mod.sh
