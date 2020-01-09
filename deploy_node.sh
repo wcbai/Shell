@@ -326,7 +326,7 @@ firewall_set(){
 
 install_ssr(){
 	clear
-	Install_Libsodium && ldconfig
+	# Install_Libsodium && ldconfig
 	rm -rf $ssr_path
 	echo 'SSR下载中...'
 	git clone -b master --depth=1 $ssr_url $ssr_path && cd $ssr_path
