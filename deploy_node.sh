@@ -4,7 +4,7 @@ export PATH
 #=================================================================#
 #   System Required:  CentOS7, Ubuntu, Root Permission            #
 #   Description: panel node deploy script                         #
-#   Version: 1.1.0                                                #
+#   Version: 1.1.1                                                #
 #   Author: 阿拉凹凸曼                                             #
 #   Intro:  https://sobaigu.com/                                  #
 #==================================================================
@@ -36,7 +36,10 @@ service_Cmd() {
 }
 
 $cmd --exclude=kernel* -y update
-$cmd install -y wget curl unzip git gcc vim lrzsz screen ntp ntpdate cron net-tools telnet python-pip m2crypto
+$cmd install -y wget curl python unzip git gcc vim lrzsz screen ntp ntpdate cron net-tools telnet m2crypto
+# 安装pip
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py
 pip install --upgrade pip setuptools
 # 设置时区为CST
 echo yes | cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
@@ -313,9 +316,9 @@ firewall_set(){
 
 install_ssr(){
 	clear
-	# Install_Libsodium
 	cd /usr/
 	rm -rf /usr/shadowsocksr
+	Install_Libsodium
 	echo 'SSR下载中...'
 	git clone -b master https://github.com/828768/shadowsocksr.git && cd shadowsocksr && bash initcfg.sh
 	pip install -r requestment.txt
