@@ -9,10 +9,10 @@ export PATH
 #   Intro:  https://sobaigu.com/                                  #
 #==================================================================
 
-# libsodium_file="libsodium-1.0.17"
-# libsodium_url="https://github.com/jedisct1/libsodium/releases/download/1.0.17/libsodium-1.0.17.tar.gz"
-libsodium_url="https://github.com/jedisct1/libsodium"
-libsodium_dir="/usr/libsodium"
+libsodium_file="libsodium-1.0.17"
+libsodium_url="https://github.com/jedisct1/libsodium/releases/download/1.0.17/libsodium-1.0.17.tar.gz"
+# libsodium_url="https://github.com/jedisct1/libsodium"
+# libsodium_dir="/usr/libsodium"
 ssr_url="https://github.com/828768/shadowsocksr.git"
 ssr_path="/usr/shadowsocksr"
 bbr_url="https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh"
@@ -460,8 +460,19 @@ Install_Libsodium(){
 	echo -e "${Info} 安装依赖..."
 	$cmd -y groupinstall "Development Tools"
 	echo -e "${Info} 下载..."
-	git clone --branch stable --depth=1 $libsodium_url $libsodium_dir
-	cd $libsodium_dir
+	# git clone --branch stable --depth=1 $libsodium_url $libsodium_dir
+	# cd $libsodium_dir
+
+	# Download libsodium file
+    if ! wget --no-check-certificate -O ${libsodium_file}.tar.gz ${libsodium_url}; then
+        echo -e "[${red}Error${plain}] Failed to download ${libsodium_file}.tar.gz!"
+        exit 1
+    fi
+    # Install libsodium
+	tar zxf ${libsodium_file}.tar.gz
+	cd ${libsodium_file}
+	# ./configure --prefix=/usr && make && make install
+
 	echo -e "${Info} 编译安装..."
 	./configure --disable-maintainer-mode && make -j2 && make install
 	echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
