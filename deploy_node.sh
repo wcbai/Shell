@@ -9,6 +9,16 @@ export PATH
 #   Intro:  https://sobaigu.com/                                  #
 #==================================================================
 
+# libsodium_file="libsodium-1.0.17"
+# libsodium_url="https://github.com/jedisct1/libsodium/releases/download/1.0.17/libsodium-1.0.17.tar.gz"
+libsodium_url="https://github.com/jedisct1/libsodium"
+libsodium_dir="/usr/libsodium"
+ssr_url="https://github.com/828768/shadowsocksr.git"
+ssr_path="/usr/shadowsocksr"
+bbr_url="https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh"
+bbr_file="bbr_tcp_mod.sh"
+
+
 [ $(id -u) != "0" ] && { echo "错误: 请用root执行"; exit 1; }
 sys_bit=$(uname -m)
 if [[ -f /usr/bin/apt ]] || [[ -f /usr/bin/yum && -f /bin/systemctl ]]; then
@@ -36,7 +46,7 @@ service_Cmd() {
 }
 
 $cmd --exclude=kernel* -y update
-$cmd install -y wget curl python unzip git gcc vim lrzsz screen ntp ntpdate cron net-tools telnet m2crypto
+$cmd install -y wget curl python unzip git gcc vim lrzsz screen ntp ntpdate cron net-tools telnet m2crypto python-devel python-setuptools openssl openssl-devel automake autoconf make libtool
 # 安装pip
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python get-pip.py
@@ -316,12 +326,11 @@ firewall_set(){
 
 install_ssr(){
 	clear
-	cd /usr/
-	rm -rf /usr/shadowsocksr
-	Install_Libsodium
+	Install_Libsodium && ldconfig
+	rm -rf $ssr_path
 	echo 'SSR下载中...'
-	git clone -b master https://github.com/828768/shadowsocksr.git && cd shadowsocksr && bash initcfg.sh
-	pip install -r requestment.txt
+	git clone -b master --depth=1 $ssr_url $ssr_path && cd $ssr_path
+	bash initcfg.sh && pip install -r requestment.txt
 	echo 'SSR安装完成'
 	echo '开始配置节点连接信息...'
 	read -p "数据库服务器地址:" db_Host
@@ -353,7 +362,7 @@ install_ssr(){
 	read -p "$(echo -e "$yellow设置认证密码$none(默认：${cyan}forvip$none)")：" ss_Password
 		[ -z "$ss_Password" ] && ss_Password="forvip"
 	
-	echo -e "选择加密方式：$yellow \n1. none\n2. rc4-md5\n3. aes-256-cfb"$none
+	echo -e "选择加密方式：$yellow \n1. none\n2. rc4-md5\n3. aes-256-cfb\n4. aes-256-gcm"$none
 	read -p "$(echo -e "(默认：${cyan}2. rc4-md5$none)")：" ss_method
 		[ -z "$ss_method" ] && ss_method="rc4-md5"
 	if [[ $ss_method ]]; then
@@ -366,6 +375,9 @@ install_ssr(){
 				;;
 			3)
 				ss_method="aes-256-cfb"
+				;;
+			4)
+				ss_method="aes-256-gcm"
 				;;
 		esac
 	fi
@@ -427,8 +439,9 @@ install_ssr(){
 
 	#启动并设置开机自动运行
 	chmod +x run.sh && ./run.sh
-	sed -i "/shadowsocksr\/run.sh$/d"  /etc/rc.d/rc.local
-	echo "/usr/shadowsocksr/run.sh" >> /etc/rc.d/rc.local
+	ln -s "$ssr_path/run.sh" "/etc/init.d/ssrrun.sh"
+	# sed -i "/shadowsocksr\/run.sh$/d"  /etc/rc.d/rc.local
+	# echo "/usr/shadowsocksr/run.sh" >> /etc/rc.d/rc.local
 	firewall_set
 }
 
@@ -447,8 +460,8 @@ Install_Libsodium(){
 	echo -e "${Info} 安装依赖..."
 	$cmd -y groupinstall "Development Tools"
 	echo -e "${Info} 下载..."
-	git clone --depth=1 https://github.com/jedisct1/libsodium --branch stable
-	cd libsodium
+	git clone --branch stable --depth=1 $libsodium_url $libsodium_dir
+	cd $libsodium_dir
 	echo -e "${Info} 编译安装..."
 	./configure --disable-maintainer-mode && make -j2 && make install
 	echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
@@ -461,8 +474,8 @@ Install_Libsodium(){
 
 open_bbr(){
 	cd
-	wget -N --no-check-certificate "https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh" -O bbr_tcp_mod.sh
-	bash bbr_tcp_mod.sh
+	wget -N --no-check-certificate $bbr_url -O $bbr_file
+	bash $bbr_file
 }
 
 echo -e "1.Install V2Ray+Caddy"
