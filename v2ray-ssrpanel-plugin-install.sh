@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # A copy of official file: github.com/v2ray/v2ray-core/blob/master/release/install-release.sh
-# Original source is located at github.com/828768/ssrpanel-v2ray-plugin/blob/master/install-release.sh
+# Original source is located at github.com/ColetteContreras/v2ray-poseidon/blob/master/install-release.sh
 
 # If not specify, default meaning of return value:
 # 0: Success
@@ -116,10 +116,10 @@ sysArch(){
 }
 
 downloadV2Ray(){
-    rm -rf /tmp/v2ray
-    mkdir -p /tmp/v2ray
+    rm -rf ${VSRC_ROOT}
+    mkdir -p ${VSRC_ROOT}
     colorEcho ${BLUE} "Downloading V2Ray."
-    DOWNLOAD_LINK="https://github.com/828768/ssrpanel-v2ray-plugin/releases/download/${NEW_VER}/v2ray-linux-${VDIS}.zip"
+    DOWNLOAD_LINK="https://github.com/ColetteContreras/v2ray-poseidon/releases/download/${NEW_VER}/v2ray-linux-${VDIS}.zip"
     curl ${PROXY} -L -H "Cache-Control: no-cache" -o ${ZIPFILE} ${DOWNLOAD_LINK}
     if [ $? != 0 ];then
         colorEcho ${RED} "Failed to download! Please check your network or try again."
@@ -172,8 +172,8 @@ getPMT(){
 }
 
 extract(){
-    colorEcho ${BLUE}"Extracting V2Ray package to /tmp/v2ray."
-    mkdir -p /tmp/v2ray
+    colorEcho ${BLUE}"Extracting V2Ray package to ${VSRC_ROOT}."
+    mkdir -p ${VSRC_ROOT}
     unzip $1 -d ${VSRC_ROOT}
     if [[ $? -ne 0 ]]; then
         colorEcho ${RED} "Failed to extract V2Ray."
@@ -201,7 +201,7 @@ extract(){
 #         if [[ ${CUR_VER} != v* ]]; then
 #             CUR_VER=v${CUR_VER}
 #         fi
-#         TAG_URL="https://api.github.com/repos/828768/ssrpanel-v2ray-plugin/releases/latest"
+#         TAG_URL="https://api.github.com/repos/ColetteContreras/v2ray-poseidon/releases/latest"
 #         NEW_VER=`curl ${PROXY} -s ${TAG_URL} --connect-timeout 10| grep 'tag_name' | head -1 | cut -d\" -f4`
 #         if [[ ${NEW_VER} != v* ]]; then
 #           NEW_VER=v${NEW_VER}
