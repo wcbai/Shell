@@ -326,7 +326,7 @@ firewall_set(){
 
 install_ssr(){
 	clear
-	# Install_Libsodium && ldconfig
+	yum -y install libsodium && ldconfig
 	rm -rf $ssr_path
 	echo 'SSR下载中...'
 	git clone -b master --depth=1 $ssr_url $ssr_path && cd $ssr_path
@@ -443,44 +443,6 @@ install_ssr(){
 	# sed -i "/shadowsocksr\/run.sh$/d"  /etc/rc.d/rc.local
 	# echo "/usr/shadowsocksr/run.sh" >> /etc/rc.d/rc.local
 	firewall_set
-}
-
-Install_Libsodium(){
-	Libsodiumr_file=Libsodiumr_file="/usr/local/lib/libsodium.so"
-	if [[ -e ${Libsodiumr_file} ]]; then
-		echo -e "${Error} libsodium 已安装 , 是否覆盖安装(更新)？[y/N]"
-		read -e -p "(默认: n):" yn
-		[[ -z ${yn} ]] && yn="n"
-		if [[ ${yn} == [Nn] ]]; then
-			echo "已取消..." && exit 1
-		fi
-	else
-		echo -e "${Info} libsodium 未安装，开始安装..."
-	fi
-	echo -e "${Info} 安装依赖..."
-	$cmd -y groupinstall "Development Tools"
-	echo -e "${Info} 下载..."
-	# git clone --branch stable --depth=1 $libsodium_url $libsodium_dir
-	# cd $libsodium_dir
-
-	# Download libsodium file
-    if ! wget --no-check-certificate -O ${libsodium_file}.tar.gz ${libsodium_url}; then
-        echo -e "[${red}Error${plain}] Failed to download ${libsodium_file}.tar.gz!"
-        exit 1
-    fi
-    # Install libsodium
-	tar zxf ${libsodium_file}.tar.gz
-	cd ${libsodium_file}
-
-	echo -e "${Info} 编译安装..."
-	./configure --prefix=/usr && make && make install && rm -rf ${libsodium_file}.tar.gz ${libsodium_file}
-	# ./configure --disable-maintainer-mode && make -j2 && make install
-	echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
-	if [[ -e ${Libsodiumr_file} ]]; then
-		echo && echo -e "${Info} libsodium 安装成功 !" && echo
-	else
-		echo -e "${Error} libsodium 安装失败 !" && exit 1
-	fi
 }
 
 open_bbr(){
