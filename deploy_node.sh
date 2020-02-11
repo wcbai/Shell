@@ -3,21 +3,20 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 #=================================================================#
 #   System Required:  CentOS7, Ubuntu, Root Permission            #
-#   Description: panel node deploy script                         #
-#   Version: 1.1.1                                                #
+#   Description: just for ssrpanel node deploy script                         #
+#   Version: 1.1.2                                                #
 #   Author: 阿拉凹凸曼                                             #
 #   Intro:  https://sobaigu.com/                                  #
 #==================================================================
 
-libsodium_file="libsodium-1.0.17"
-libsodium_url="https://github.com/jedisct1/libsodium/releases/download/1.0.17/libsodium-1.0.17.tar.gz"
-# libsodium_url="https://github.com/jedisct1/libsodium"
-# libsodium_dir="/usr/libsodium"
 ssr_url="https://github.com/828768/shadowsocksr.git"
 ssr_path="/usr/shadowsocksr"
 bbr_url="https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh"
 bbr_file="bbr_tcp_mod.sh"
-
+v2_installer="https://raw.githubusercontent.com/828768/Shell/master/v2ray-ssrpanel-plugin-install.sh"
+v2_config="https://raw.githubusercontent.com/828768/Shell/master/resource/v2ray-config.json"
+caddy_www="https://raw.githubusercontent.com/828768/Shell/master/resource/www.zip"
+caddy_config="https://raw.githubusercontent.com/828768/Shell/master/resource/Caddyfile"
 
 [ $(id -u) != "0" ] && { echo "错误: 请用root执行"; exit 1; }
 sys_bit=$(uname -m)
@@ -46,7 +45,8 @@ service_Cmd() {
 }
 
 $cmd --exclude=kernel* -y update
-$cmd install -y wget curl python unzip git gcc vim lrzsz screen ntp ntpdate cron net-tools telnet m2crypto python-devel python-setuptools openssl openssl-devel automake autoconf make libtool
+$cmd -y install wget curl unzip git gcc gcc-c++ vim lrzsz screen ntp ntpdate cron net-tools telnet m2crypto python python-devel python-setuptools openssl openssl-devel make automake autoconf libtool
+$cmd -y groupinstall "Development Tools"
 # 安装pip
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python get-pip.py
@@ -155,8 +155,8 @@ install_v2ray(){
 	echo "logs directory: /var/log/v2ray"
 	echo "configuration directory: /etc/v2ray"
 
-	curl -L -s https://raw.githubusercontent.com/828768/Shell/master/v2ray-ssrpanel-plugin-install.sh | bash
-	wget --no-check-certificate -O config.json https://raw.githubusercontent.com/828768/Shell/master/resource/v2ray-config.json
+	curl -L -s $v2_installer | bash
+	wget --no-check-certificate -O config.json $v2_config
 	sed -i -e "s/v2ray_Port/$v2ray_Port/g" config.json
 	sed -i -e "s/alter_Id/$alter_Id/g" config.json
 	sed -i -e "s/forward_Path/$forward_Path/g" config.json
@@ -227,11 +227,11 @@ install_caddy() {
 	echo -e "Caddy安装完成！"
 
 	# 放个本地游戏网站
-	wget --no-check-certificate -O www.zip https://raw.githubusercontent.com/828768/Shell/master/resource/www.zip
+	wget --no-check-certificate -O www.zip $caddy_www
 	unzip -n www.zip -d /srv/ && rm -f www.zip
 	# 修改配置
 	mkdir -p /etc/caddy/
-	wget --no-check-certificate -O Caddyfile https://raw.githubusercontent.com/828768/Shell/master/resource/Caddyfile
+	wget --no-check-certificate -O Caddyfile $caddy_config
 	if [ $email == y ]; then
 		local email=$(((RANDOM << 22)))
 		sed -i -e "s/email/$email@gmail.com/g" Caddyfile
