@@ -438,11 +438,28 @@ install_ssr(){
 	sed -i -e "s/ss_Ban_Limit/$ss_Ban_Limit/g" user-config.json
 
 	#启动并设置开机自动运行
-	chmod +x run.sh && ./run.sh
-	ln -s "$ssr_path/run.sh" "/etc/init.d/ssrrun.sh"
+	if [ -f $ssr_path/server.py ]; then
+        chmod +x "$ssr_path/run.sh"
+		ln -sf "$ssr_path/run.sh" "/etc/init.d/ssrrun"
+        if $cmd="yum"; then
+            chkconfig --add ssrrun
+            chkconfig ssrrun on
+        elif $cmd="apt"; then
+            update-rc.d -f ssrrun defaults
+        fi
+    	/etc/init.d/ssrrun
+	else
+        echo "ShadowsocksR install failed, please check it"
+        install_cleanup
+        exit 1
+    fi
+	# chmod +x run.sh && ./run.sh
 	# sed -i "/shadowsocksr\/run.sh$/d"  /etc/rc.d/rc.local
 	# echo "/usr/shadowsocksr/run.sh" >> /etc/rc.d/rc.local
 	firewall_set
+}
+install_cleanup(){
+	rm -rf $ssr_path "/etc/init.d/ssrrun"
 }
 
 open_bbr(){
