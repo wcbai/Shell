@@ -1,6 +1,6 @@
-https://fake_Domain http://fake_Domain {
+fake_Domain {
   root /srv/www
-  tls email
+  tls tls_CA
   gzip
   timeouts none
   proxy /forward_Path 127.0.0.1:v2ray_Port {
