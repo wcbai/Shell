@@ -13,33 +13,22 @@ check_root(){
 	[[ $EUID != 0 ]] && echo -e "${Error} 当前账号没有ROOT权限，无法继续操作，请使用${Green_background_prefix} sudo su ${Font_color_suffix}来获取临时ROOT权限（执行后会提示输入当前账号的密码）。" && exit 1
 }
 
-check_sys(){
-	if [[ -f /etc/redhat-release ]]; then
-		release="centos"
-	elif cat /etc/issue | grep -q -E -i "debian"; then
-		release="debian"
-	elif cat /etc/issue | grep -q -E -i "ubuntu"; then
-		release="ubuntu"
-	elif cat /etc/issue | grep -q -E -i "centos|red hat|redhat"; then
-		release="centos"
-	elif cat /proc/version | grep -q -E -i "debian"; then
-		release="debian"
-	elif cat /proc/version | grep -q -E -i "ubuntu"; then
-		release="ubuntu"
-	elif cat /proc/version | grep -q -E -i "centos|red hat|redhat"; then
-		release="centos"
-    else
-        echo -e "$red 这个垃圾脚本不支持你的系统。$none" && exit 1
-    fi
-	bit=`uname -m`
-}
-check_installcmd(){
-	if [[ ${release} == "centos" ]]; then
-        installcmd="yum"
-    else
-        installcmd="apt"
-    fi
-}
+sys_bit=$(uname -m)
+if [[ -f /usr/bin/apt ]] || [[ -f /usr/bin/yum && -f /bin/systemctl ]]; then
+	if [[ -f /usr/bin/yum ]]; then
+		installcmd="yum"
+		$installcmd -y install epel-release
+	fi
+	if [[ -f /usr/bin/apt ]]; then
+		installcmd="apt"
+	fi
+	if [[ -f /bin/systemctl ]]; then
+		systemd=true
+	fi
+
+else
+	echo -e " 哈哈……这个 ${red}辣鸡脚本${none} 只支持CentOS7+及Ubuntu14+ ${yellow}(-_-) ${none}" && exit 1
+fi
 service_Cmd(){
 	if [[ $systemd ]]; then
 		systemctl $1 $2
@@ -50,7 +39,6 @@ service_Cmd(){
 
 #更新系统
 $installcmd -y --exclude=kernel* update
-$installcmd -y install wget epel-release
 #安装常用基础软件
 $installcmd -y install vim lrzsz screen git unzip ntp crontabs net-tools telnet gcc gcc-c++ make automake autoconf libtool
 #设置时区为东八区
