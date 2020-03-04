@@ -4,7 +4,7 @@ export PATH
 #=================================================================#
 #   System Required:  CentOS7, Ubuntu, Root Permission            #
 #   Description: just for ssrpanel node deploy script                         #
-#   Version: 1.1.2                                                #
+#   Version: 1.1.3                                                #
 #   Author: 阿拉凹凸曼                                             #
 #   Intro:  https://sobaigu.com/                                  #
 #==================================================================
@@ -48,9 +48,13 @@ $cmd --exclude=kernel* -y update
 $cmd -y install wget curl unzip git gcc gcc-c++ vim lrzsz screen ntp ntpdate cron net-tools telnet m2crypto python python-devel python-setuptools openssl openssl-devel make automake autoconf libtool
 $cmd -y groupinstall "Development Tools"
 # 安装pip
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python get-pip.py
-pip install --upgrade pip setuptools
+if command -v pip >/dev/null 2>&1; then
+	pip install --upgrade pip setuptools
+else
+	curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+	python get-pip.py
+	pip install --upgrade pip setuptools
+fi
 # 设置时区为CST
 echo yes | cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 ntpdate cn.pool.ntp.org
@@ -233,7 +237,7 @@ install_caddy() {
 	# 修改配置
 	mkdir -p /etc/caddy/
 	wget --no-check-certificate -O Caddyfile $caddy_config
-	if [ $tls_CA == y ]; then
+	if [[ $tls_CA == "y" || $tls_CA == "Y" ]]; then
 		local tls_CA=$(((RANDOM << 22)))
 		sed -i -e "s/tls_CA/$tls_CA@gmail.com/g" Caddyfile
 	else
@@ -241,10 +245,11 @@ install_caddy() {
 	fi
 
 	# 如果不填伪装域名，那么直接监听80和443端口
-	if	[$fake_Domain]; then
+	if	[[ $fake_Domain ]]; then
 		sed -i -e "s/fake_Domain/http:\/\/$fake_Domain https:\/\/$fake_Domain/g" Caddyfile
 	else
 		sed -i -e "s/fake_Domain/:80 :443/g" Caddyfile
+		echo -e "[${yellow}Warning${plain}]未指定伪装域名，无法使用tls，请自行修改 /etc/caddy/Caddyfile"
 	fi
 	sed -i -e "s/forward_Path/$forward_Path/g" Caddyfile
 	sed -i -e "s/v2ray_Port/$v2ray_Port/g" Caddyfile
