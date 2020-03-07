@@ -52,7 +52,7 @@ if command -v pip >/dev/null 2>&1; then
 	pip install --upgrade pip setuptools
 else
 	curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-	python get-pip.py
+	python get-pip.py && rm -f get-pip.py
 	pip install --upgrade pip setuptools
 fi
 # 设置时区为CST
