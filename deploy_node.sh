@@ -14,7 +14,7 @@ ssr_path="/usr/shadowsocksr"
 bbr_url="https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh"
 bbr_file="bbr_tcp_mod.sh"
 v2_installer="https://raw.githubusercontent.com/828768/Shell/master/v2ray-ssrpanel-plugin-install.sh"
-v2_config="https://raw.githubusercontent.com/828768/Shell/master/resource/v2ray-config.json"
+v2_config="https://raw.githubusercontent.com/wcbai/v2ray/master/config.json"
 caddy_www="https://raw.githubusercontent.com/828768/Shell/master/resource/www.zip"
 caddy_config="https://raw.githubusercontent.com/828768/Shell/master/resource/Caddyfile"
 
@@ -453,10 +453,10 @@ install_ssr(){
 	if [ -f $ssr_path/server.py ]; then
         chmod +x "$ssr_path/run.sh"
 		ln -sf "$ssr_path/run.sh" "/etc/init.d/ssrrun"
-        if [[ $cmd=="yum" ]]; then
+        if $cmd="yum"; then
             chkconfig --add ssrrun
             chkconfig ssrrun on
-        elif [[ $cmd=="apt" ]]; then
+        elif $cmd="apt"; then
             update-rc.d -f ssrrun defaults
         fi
     	/etc/init.d/ssrrun
